@@ -77,17 +77,12 @@ ingress:
   #      - chart-example.local
 
 resources:
-  {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    cpu: 2000m # 2 vCPU - higher as it handles all routing
+    memory: 4Gi # 4GB - needs more memory for concurrent connections
+  requests:
+    cpu: 1000m # 1 vCPU base allocation
+    memory: 2Gi # 2GB base memory
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
@@ -101,11 +96,11 @@ readinessProbe:
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  enabled: true
+  minReplicas: 3 # Higher minimum for HA and load distribution
+  maxReplicas: 15 # Higher max for traffic spikes
+  targetCPUUtilizationPercentage: 75 # Slightly more aggressive scaling
+  targetMemoryUtilizationPercentage: 75
 
 # Additional volumes on the output Deployment definition.
 volumes: []
