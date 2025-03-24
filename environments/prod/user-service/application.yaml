@@ -16,10 +16,10 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
+    repoURL: https://github.com/cs301-crm/project-2024-25t2-301-g3t3-charts.git
     path: charts/user-service
     targetRevision: main
     helm:
-      repoURL: https://github.com/cs301-crm/project-2024-25t2-301-g3t3-charts.git
       valueFiles:
         - values.yaml
   syncPolicy:
