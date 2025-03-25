@@ -126,6 +126,6 @@ affinity: {}
 # YIJI ADDED THIS
 metrics:
   enabled: true
-  port: 8080
+  port: 9113
   path: /metrics
   label: external-nginx

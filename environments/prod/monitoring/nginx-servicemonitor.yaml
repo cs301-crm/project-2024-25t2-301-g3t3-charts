@@ -11,4 +11,3 @@ spec:
       app: external-nginx
   endpoints:
   - port: metrics  # Port exposed by Nginx Ingress Service
-    path: /metrics  # The path where metrics are exposed
