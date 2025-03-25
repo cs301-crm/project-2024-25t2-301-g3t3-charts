@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-metrics-monitor
+  namespace: default
+  labels:
+    release: prometheus  # This label must match the Prometheus Operator's selector
+spec:
+  selector:
+    matchLabels:
+      app: external-nginx
+  endpoints:
+  - port: metrics  # Port exposed by Nginx Ingress Service
+    path: /metrics  # The path where metrics are exposed
