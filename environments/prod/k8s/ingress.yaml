@@ -6,12 +6,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: http-01-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      location /metrics {
-        stub_status on;
-        access_log off;
-      }
-
 spec:
   ingressClassName: external-nginx
   rules:
