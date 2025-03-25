@@ -20,3 +20,4 @@ spec:
     {{- end }}
   selector:
     {{- include "api-gateway.selectorLabels" . | nindent 4 }}
+    app: {{ .Values.metrics.label }}
