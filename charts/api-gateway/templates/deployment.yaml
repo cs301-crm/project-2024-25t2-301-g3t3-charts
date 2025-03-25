@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "api-gateway.fullname" . }}
   labels:
+    app: {{ .Values.metrics.label }}
     {{- include "api-gateway.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
