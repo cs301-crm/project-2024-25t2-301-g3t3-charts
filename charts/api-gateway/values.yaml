@@ -78,11 +78,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 2000m # 2 vCPU - higher as it handles all routing
-    memory: 4Gi # 4GB - needs more memory for concurrent connections
+    cpu: 1000m
+    memory: 2Gi
   requests:
-    cpu: 1000m # 1 vCPU base allocation
-    memory: 2Gi # 2GB base memory
+    cpu: 400m
+    memory: 1Gi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
