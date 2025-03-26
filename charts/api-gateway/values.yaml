@@ -57,8 +57,6 @@ service:
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 9000
-  # # YIJI ADDED THIS METRICS PORT
-  # metricsPort: 8080
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -99,10 +97,10 @@ readinessProbe:
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
   enabled: true
-  minReplicas: 3 # Higher minimum for HA and load distribution
-  maxReplicas: 15 # Higher max for traffic spikes
-  targetCPUUtilizationPercentage: 75 # Slightly more aggressive scaling
-  targetMemoryUtilizationPercentage: 75
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
 volumes: []
@@ -122,9 +120,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-# # YIJI ADDED THIS
-# metrics:
-#   enabled: true
-#   port: 9113
-#   path: /metrics
-#   label: external-nginx
