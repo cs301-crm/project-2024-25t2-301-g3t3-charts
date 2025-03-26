@@ -1,0 +1,18 @@
+
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+  namespace: monitoring # NOTE: tutorial says default namespace, so change this if got problem
+  labels:
+    prometheus: monitoring
+spec:
+  replicas: 1
+  serviceAccountName: prometheus
+  serviceMonitorNamespaceSelector:  {}
+  serviceMonitorSelector:
+    matchLabels:
+      app: nginx-ingress-servicemonitor
+  resources:
+    requests:
+      memory: 500Mi
