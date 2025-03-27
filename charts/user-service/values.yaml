@@ -23,6 +23,8 @@ env:
     value: org.hibernate.dialect.PostgreSQLDialect
   - name: HTTPS_ENABLED
     value: true
+  - name: CORS_ORIGIN
+    value: https://itsag3t3.com
   - name: JWT_PRIVATE_KEY
     valueFrom:
       secretKeyRef:
@@ -115,16 +117,16 @@ livenessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 20
-  periodSeconds: 5
-  failureThreshold: 3
+  initialDelaySeconds: 40
+  periodSeconds: 10
+  failureThreshold: 5
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 20
-  periodSeconds: 5
-  failureThreshold: 3
+  initialDelaySeconds: 40
+  periodSeconds: 10
+  failureThreshold: 5
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
