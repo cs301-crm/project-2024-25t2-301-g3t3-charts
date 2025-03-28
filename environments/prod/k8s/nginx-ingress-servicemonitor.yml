@@ -18,7 +18,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: nginx-ingress-servicemonitor
-  namespace: default # NOTE: tutorial did not specify namespace, so remove this if got problem
+  namespace: monitoring # NOTE: tutorial did not specify namespace, so remove this if got problem
   labels:
     app: nginx-ingress-servicemonitor
 spec:
