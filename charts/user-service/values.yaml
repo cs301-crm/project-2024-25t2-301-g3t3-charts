@@ -143,7 +143,7 @@ volumes:
       driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
-        secretProviderClass: "scrooge-bank-secrets"
+        secretProviderClass: scrooge-bank-secrets-provider
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
