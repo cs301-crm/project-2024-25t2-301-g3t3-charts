@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-ingress-servicemonitor
-  namespace: monitoring
+  name: nginx-ingress-metrics
+  namespace: ingress
   labels:
     app: nginx-ingress-servicemonitor
 spec:
@@ -27,9 +27,6 @@ spec:
   selector:
     matchLabels:
       app: nginx-ingress-servicemonitor
-  namespaceSelector:
-    matchNames:
-      - ingress
   endpoints:
     - port: prometheus
       path: /metrics
