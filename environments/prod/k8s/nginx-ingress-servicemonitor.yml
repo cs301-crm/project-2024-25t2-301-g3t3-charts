@@ -7,10 +7,10 @@ metadata:
     app: nginx-ingress-servicemonitor
 spec:
   ports:
-  - name: prometheus
-    protocol: TCP
-    port: 9113
-    targetPort: 9113
+    - name: prometheus
+      protocol: TCP
+      port: 9113
+      targetPort: 9113
   selector:
     app: nginx-ingress
 ---
@@ -18,7 +18,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: nginx-ingress-servicemonitor
-  namespace: monitoring # NOTE: tutorial did not specify namespace, so remove this if got problem
+  namespace: default # NOTE: tutorial did not specify namespace, so remove this if got problem
   labels:
     app: nginx-ingress-servicemonitor
 spec:
@@ -26,4 +26,4 @@ spec:
     matchLabels:
       app: nginx-ingress-servicemonitor
   endpoints:
-  - port: prometheus
+    - port: prometheus
