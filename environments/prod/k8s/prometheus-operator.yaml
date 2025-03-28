@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
   name: prometheus
-  # namespace: monitoring # Ensure this matches other resources
+  namespace: default  # Ensure this matches other resources
   labels:
     prometheus: monitoring
 spec:
