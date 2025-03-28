@@ -5,7 +5,7 @@ metadata:
   name: nginx-ingress-metrics
   namespace: ingress
   labels:
-    app: nginx-ingress-servicemonitor
+    app: nginx-ingress-metrics
 spec:
   ports:
     - name: prometheus
@@ -13,7 +13,7 @@ spec:
       port: 10254
       targetPort: 10254
   selector:
-    app: nginx-ingress
+    app: nginx-ingress-metrics
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -26,7 +26,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: nginx-ingress-servicemonitor
+      app: nginx-ingress-metrics
   endpoints:
     - port: prometheus
       path: /metrics
