@@ -22,7 +22,7 @@ metadata:
   namespace: monitoring
   labels:
     app: nginx-ingress-servicemonitor
-    release: prometheus
+    release: prometheus-k8s
 spec:
   selector:
     matchLabels:
@@ -32,3 +32,4 @@ spec:
       - ingress
   endpoints:
     - port: prometheus
+      path: /metrics
