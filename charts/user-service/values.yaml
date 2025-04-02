@@ -15,6 +15,12 @@ image:
 
 # set envs for the spring app
 env:
+  - name: SPRING_REDIS_HOST
+    value: "redis-redis"
+  - name: SPRING_DATASOURCE_PORT
+    value: 5432
+  - name: SPRING_DATASOURCE_URL
+    value: "jdbc:postgresql:$(SPRING_DATASOURCE_HOST}:$(SPRING_DATASOURCE_PORT)/user-db"
   - name: SPRING_DATASOURCE_DRIVER
     value: "org.postgresql.Driver"
   - name: SPRING_JPA_DDL
@@ -25,6 +31,11 @@ env:
     value: true
   - name: CORS_ORIGIN
     value: https://itsag3t3.com
+  - name: SPRING_DATASOURCE_HOST
+    valueFrom:
+      secretKeyRef:
+        name: spring_datasource_host
+        key: k8s-spring-datasource-host
   - name: JWT_PRIVATE_KEY
     valueFrom:
       secretKeyRef:
