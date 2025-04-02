@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
   name: prometheus
-  namespace: monitoring # Ensure this matches other resources
+  namespace: monitoring
   labels:
     prometheus: monitoring
 spec:
@@ -13,6 +13,7 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       app: nginx-ingress-servicemonitor
+      release: prometheus
   resources:
     requests:
       memory: 500Mi
