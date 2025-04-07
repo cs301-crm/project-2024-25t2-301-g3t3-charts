@@ -58,6 +58,14 @@ service:
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 9000
 
+env:
+  - name: COMMS_SERVICE_URL
+    value: http://comms-service.default.svc.cluster.local:8083
+  - name: USER_SERVICE_URL
+    value: http://user-service.default.svc.cluster.local:8080
+  - name: CLIENT_SERVICE_URL
+    value: http://client-service.default.svc.cluster.local:8081
+
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
