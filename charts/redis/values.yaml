@@ -303,10 +303,32 @@ master:
   customStartupProbe: {}
   ## @param master.customLivenessProbe Custom livenessProbe that overrides the default one
   ##
-  customLivenessProbe: {}
+  customLivenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 5
+    successThreshold: 1
+    exec:
+      command:
+        - bash
+        - -c
+        - "/health/ping_readiness_local.sh 1"
   ## @param master.customReadinessProbe Custom readinessProbe that overrides the default one
   ##
-  customReadinessProbe: {}
+  customReadinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 5
+    successThreshold: 1
+    exec:
+      command:
+        - bash
+        - -c
+        - "/health/ping_readiness_local.sh 1"
   ## Redis&reg; master resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param master.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if master.resources is set (master.resources is recommended for production).
