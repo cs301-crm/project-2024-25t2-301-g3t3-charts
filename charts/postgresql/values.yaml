@@ -347,6 +347,241 @@ primary:
         CREATE DATABASE "client-db";
         CREATE DATABASE "comms-db";
 
+      init-users.sql: |
+        \c "user-db";
+        SET statement_timeout = 0;
+        SET lock_timeout = 0;
+        SET idle_in_transaction_session_timeout = 0;
+        SET transaction_timeout = 0;
+        SET client_encoding = 'UTF8';
+        SET standard_conforming_strings = on;
+        SELECT pg_catalog.set_config('search_path', '', false);
+        SET check_function_bodies = false;
+        SET xmloption = content;
+        SET client_min_messages = warning;
+        SET row_security = off;
+
+        SET default_tablespace = '';
+        SET default_table_access_method = heap;
+
+        CREATE TABLE public.users (
+            enabled boolean NOT NULL,
+            created_at timestamp(6) with time zone NOT NULL,
+            id uuid NOT NULL,
+            email character varying(255) NOT NULL,
+            first_name character varying(255) NOT NULL,
+            last_name character varying(255) NOT NULL,
+            password character varying(255) NOT NULL,
+            user_role character varying(255),
+            CONSTRAINT users_user_role_check CHECK (((user_role)::text = ANY ((ARRAY['AGENT'::character varying, 'ADMIN'::character varying])::text[])))
+        );
+
+        ALTER TABLE public.users OWNER TO postgres;
+        CREATE TABLE public.users_refresh (
+            expires_at timestamp(6) with time zone NOT NULL,
+            id uuid NOT NULL,
+            token uuid NOT NULL,
+            user_id uuid NOT NULL
+        );
+
+        ALTER TABLE public.users_refresh OWNER TO postgres;
+        ALTER TABLE ONLY public.users
+            ADD CONSTRAINT users_email_key UNIQUE (email);
+        ALTER TABLE ONLY public.users
+            ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.users_refresh
+            ADD CONSTRAINT users_refresh_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.users_refresh
+            ADD CONSTRAINT fkqjgwan1bufldume9vkj8ptj8m FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
+        VALUES (
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'Root',
+          'Admin',
+          'root@root.com',
+          '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+          'ADMIN',
+          TRUE,
+          '2025-03-26 07:59:15.736664+00'
+        );
+      init-comms.sql: |
+        \c "comms-db"
+        SET statement_timeout = 0;
+        SET lock_timeout = 0;
+        SET idle_in_transaction_session_timeout = 0;
+        SET transaction_timeout = 0;
+        SET client_encoding = 'UTF8';
+        SET standard_conforming_strings = on;
+        SELECT pg_catalog.set_config('search_path', '', false);
+        SET check_function_bodies = false;
+        SET xmloption = content;
+        SET client_min_messages = warning;
+        SET row_security = off;
+
+        SET default_tablespace = '';
+
+        SET default_table_access_method = heap;
+
+        CREATE TABLE public.account_communications (
+            id uuid DEFAULT gen_random_uuid() NOT NULL,
+            agent_id character varying(255) NOT NULL,
+            client_id character varying(255) NOT NULL,
+            client_email character varying(255) NOT NULL,
+            account_id character varying(255) NOT NULL,
+            account_type character varying(255) NOT NULL,
+            crud_type character varying(50) NOT NULL,
+            subject character varying(255) NOT NULL,
+            status character varying(50) NOT NULL,
+            "timestamp" timestamp without time zone NOT NULL,
+            CONSTRAINT account_communications_client_email_check CHECK (((client_email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'::text))
+        );
+
+        ALTER TABLE public.account_communications OWNER TO postgres;
+
+        CREATE TABLE public.client_communications (
+            id uuid DEFAULT gen_random_uuid() NOT NULL,
+            agent_id character varying(255) NOT NULL,
+            client_id character varying(255) NOT NULL,
+            client_email character varying(255) NOT NULL,
+            crud_type character varying(50) NOT NULL,
+            subject character varying(255) NOT NULL,
+            status character varying(50) NOT NULL,
+            "timestamp" timestamp without time zone NOT NULL,
+            CONSTRAINT client_communications_client_email_check CHECK (((client_email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'::text))
+        );
+
+        ALTER TABLE public.client_communications OWNER TO postgres;
+
+        CREATE TABLE public.otp_communications (
+            id uuid DEFAULT gen_random_uuid() NOT NULL,
+            email character varying(255) NOT NULL,
+            otp integer NOT NULL,
+            subject character varying(255) NOT NULL,
+            status character varying(50) NOT NULL,
+            "timestamp" timestamp without time zone NOT NULL,
+            CONSTRAINT otp_communications_email_check CHECK (((email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'::text))
+        );
+
+        ALTER TABLE public.otp_communications OWNER TO postgres;
+
+        CREATE TABLE public.user_communications (
+            id uuid DEFAULT gen_random_uuid() NOT NULL,
+            username character varying(255) NOT NULL,
+            user_role character varying(255) NOT NULL,
+            user_email character varying(255) NOT NULL,
+            temp_password character varying(255) NOT NULL,
+            subject character varying(255) NOT NULL,
+            status character varying(50) NOT NULL,
+            "timestamp" timestamp without time zone NOT NULL,
+            CONSTRAINT user_communications_user_email_check CHECK (((user_email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'::text))
+        );
+
+        ALTER TABLE public.user_communications OWNER TO postgres;
+
+        CREATE TABLE public.usercommunications (
+            id uuid DEFAULT gen_random_uuid() NOT NULL,
+            status character varying(255) NOT NULL,
+            subject character varying(255) NOT NULL,
+            temp_password character varying(255) NOT NULL,
+            "timestamp" timestamp(6) without time zone NOT NULL,
+            user_email character varying(255) NOT NULL,
+            user_role character varying(255) NOT NULL,
+            username character varying(255) NOT NULL,
+            CONSTRAINT usercommunications_status_check CHECK (((status)::text = ANY ((ARRAY['SENT'::character varying, 'PENDING'::character varying, 'FAILED'::character varying, 'ACKNOWLEDGED'::character varying])::text[])))
+        );
+
+        ALTER TABLE public.usercommunications OWNER TO postgres;
+
+        SELECT pg_catalog.lo_create('16470');
+        SELECT pg_catalog.lo_create('16480');
+        SELECT pg_catalog.lo_create('16490');
+        SELECT pg_catalog.lo_create('16501');
+        SELECT pg_catalog.lo_create('16511');
+        SELECT pg_catalog.lo_create('16521');
+        SELECT pg_catalog.lo_create('16531');
+        SELECT pg_catalog.lo_create('16541');
+        SELECT pg_catalog.lo_create('16579');
+        SELECT pg_catalog.lo_create('16589');
+        SELECT pg_catalog.lo_create('16590');
+        SELECT pg_catalog.lo_create('16600');
+
+        ALTER LARGE OBJECT 16470 OWNER TO postgres;
+        ALTER LARGE OBJECT 16480 OWNER TO postgres;
+        ALTER LARGE OBJECT 16490 OWNER TO postgres;
+        ALTER LARGE OBJECT 16501 OWNER TO postgres;
+        ALTER LARGE OBJECT 16511 OWNER TO postgres;
+        ALTER LARGE OBJECT 16521 OWNER TO postgres;
+        ALTER LARGE OBJECT 16531 OWNER TO postgres;
+        ALTER LARGE OBJECT 16541 OWNER TO postgres;
+        ALTER LARGE OBJECT 16579 OWNER TO postgres;
+        ALTER LARGE OBJECT 16589 OWNER TO postgres;
+        ALTER LARGE OBJECT 16590 OWNER TO postgres;
+        ALTER LARGE OBJECT 16600 OWNER TO postgres;
+
+        BEGIN;
+
+        SELECT pg_catalog.lo_open('16470', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16480', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16490', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16501', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16511', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16521', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16531', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16541', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16579', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16589', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16590', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        SELECT pg_catalog.lo_open('16600', 131072);
+        SELECT pg_catalog.lowrite(0, '\x596f7572206163636f756e7420686173206265656e207375636365737366756c6c7920637265617465642e2057656c636f6d652061626f61726421');
+        SELECT pg_catalog.lo_close(0);
+
+        COMMIT;
+
+        ALTER TABLE ONLY public.account_communications
+            ADD CONSTRAINT account_communications_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.client_communications
+            ADD CONSTRAINT client_communications_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.otp_communications
+            ADD CONSTRAINT otp_communications_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.user_communications
+            ADD CONSTRAINT user_communications_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.usercommunications
+            ADD CONSTRAINT usercommunications_pkey PRIMARY KEY (id);
+
     scriptsConfigMap: ""
     ## @param primary.initdb.scriptsSecret Secret with scripts to be run at first boot (in case it contains sensitive information)
     ## NOTE: This can work along `primary.initdb.scripts` or `primary.initdb.scriptsConfigMap`
