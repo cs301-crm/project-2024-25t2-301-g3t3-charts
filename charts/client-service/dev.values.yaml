@@ -73,6 +73,10 @@ env:
     value: postgres
   - name: SPRING_DATASOURCE_PASSWORD
     value: password
+  - name: JWT_ISSUER
+    value: http://user-service.default.svc.cluster.local:8080/api/auth
+  - name: JWT_JWK_SET_URI
+    value: http://user-service.default.svc.cluster.local:8080/api/auth/.well-known/jwks.json
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
