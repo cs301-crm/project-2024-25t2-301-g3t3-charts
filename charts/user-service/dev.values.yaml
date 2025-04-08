@@ -76,11 +76,15 @@ env:
     value: postgres
   - name: SPRING_DATASOURCE_PASSWORD
     value: password
-  - name: JWT_PRIVATE_KEY
-    valueFrom:
-      secretKeyRef:
-        name: jwt-private-key
-        key: k8s-jwt-private-key
+  # - name: JWT_PRIVATE_KEY
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: jwt-private-key
+  #       key: k8s-jwt-private-key
+
+envFrom:
+  - secretRef:
+      name: jwt-private-key
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
