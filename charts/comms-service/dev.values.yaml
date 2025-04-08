@@ -73,6 +73,10 @@ env:
     value: postgres
   - name: SPRING_DATASOURCE_PASSWORD
     value: password
+  - name: SPRING_INIT_SQL_DATA
+    value: classpath:data.sql
+  - name: SPRING_INIT_SQL_SCHEMA
+    value: classpath:schema.sql
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
