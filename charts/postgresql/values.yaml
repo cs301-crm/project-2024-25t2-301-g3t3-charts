@@ -394,7 +394,7 @@ primary:
         ALTER TABLE ONLY public.users_refresh
             ADD CONSTRAINT fkqjgwan1bufldume9vkj8ptj8m FOREIGN KEY (user_id) REFERENCES public.users(id);
 
-        \c "comms-db"
+        \c "comms-db";
         SET statement_timeout = 0;
         SET lock_timeout = 0;
         SET idle_in_transaction_session_timeout = 0;
@@ -569,18 +569,302 @@ primary:
             ADD CONSTRAINT user_communications_pkey PRIMARY KEY (id);
         ALTER TABLE ONLY public.usercommunications
             ADD CONSTRAINT usercommunications_pkey PRIMARY KEY (id);
+
+        \c "client-db";
+        SET statement_timeout = 0;
+        SET lock_timeout = 0;
+        SET idle_in_transaction_session_timeout = 0;
+        SET transaction_timeout = 0;
+        SET client_encoding = 'UTF8';
+        SET standard_conforming_strings = on;
+        SELECT pg_catalog.set_config('search_path', '', false);
+        SET check_function_bodies = false;
+        SET xmloption = content;
+        SET client_min_messages = warning;
+        SET row_security = off;
+
+        SET default_tablespace = '';
+
+        SET default_table_access_method = heap;
+
+        CREATE TABLE public.accounts (
+            currency character varying(3),
+            initial_deposit numeric(38,2) NOT NULL,
+            opening_date date NOT NULL,
+            branch_id character varying(50),
+            account_id character varying(36) NOT NULL,
+            account_status character varying(255) NOT NULL,
+            account_type character varying(255) NOT NULL,
+            client_id character varying(36) NOT NULL,
+            CONSTRAINT accounts_account_status_check CHECK (((account_status)::text = ANY ((ARRAY['ACTIVE'::character varying, 'INACTIVE'::character varying, 'PENDING'::character varying, 'CLOSED'::character varying])::text[]))),
+            CONSTRAINT accounts_account_type_check CHECK (((account_type)::text = ANY ((ARRAY['SAVINGS'::character varying, 'CHECKING'::character varying, 'BUSINESS'::character varying])::text[])))
+        );
+
+        ALTER TABLE public.accounts OWNER TO postgres;
+
+        CREATE TABLE public.clients (
+            date_of_birth date NOT NULL,
+            nric character varying(9),
+            postal_code character varying(10),
+            phone_number character varying(15),
+            city character varying(50),
+            country character varying(50),
+            first_name character varying(50),
+            last_name character varying(50),
+            state character varying(50),
+            address character varying(100),
+            agent_id character varying(255),
+            client_id character varying(36) NOT NULL,
+            email_address character varying(255),
+            gender character varying(255) NOT NULL,
+            verification_status character varying(255) NOT NULL,
+            CONSTRAINT clients_gender_check CHECK (((gender)::text = ANY ((ARRAY['MALE'::character varying, 'FEMALE'::character varying, 'NON_BINARY'::character varying, 'PREFER_NOT_TO_SAY'::character varying])::text[]))),
+            CONSTRAINT clients_verification_status_check CHECK (((verification_status)::text = ANY ((ARRAY['PENDING'::character varying, 'VERIFIED'::character varying])::text[])))
+        );
+
+        ALTER TABLE public.clients OWNER TO postgres;
+
+        CREATE TABLE public.logs (
+            date_time timestamp(6) without time zone NOT NULL,
+            after_value text,
+            agent_id character varying(255),
+            attribute_name character varying(255),
+            before_value text,
+            client_id character varying(255),
+            crud_type character varying(255) NOT NULL,
+            id character varying(36) NOT NULL,
+            CONSTRAINT logs_crud_type_check CHECK (((crud_type)::text = ANY ((ARRAY['CREATE'::character varying, 'READ'::character varying, 'UPDATE'::character varying, 'DELETE'::character varying])::text[])))
+        );
+
+        ALTER TABLE public.logs OWNER TO postgres;
+
+        ALTER TABLE ONLY public.accounts
+            ADD CONSTRAINT accounts_pkey PRIMARY KEY (account_id);
+        ALTER TABLE ONLY public.clients
+            ADD CONSTRAINT clients_email_address_key UNIQUE (email_address);
+        ALTER TABLE ONLY public.clients
+            ADD CONSTRAINT clients_nric_key UNIQUE (nric);
+        ALTER TABLE ONLY public.clients
+            ADD CONSTRAINT clients_pkey PRIMARY KEY (client_id);
+        ALTER TABLE ONLY public.logs
+            ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
+        ALTER TABLE ONLY public.accounts
+            ADD CONSTRAINT fkgymog7firrf8bnoiig61666ob FOREIGN KEY (client_id) REFERENCES public.clients(client_id);
       02-init-data.sql: |
         \c "user-db";
-        INSERT INTO public.users (enabled, created_at, id, email, first_name, last_name, password, user_role)
+        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
         VALUES (
-          true,
-          '2025-03-26 07:59:15.736664+00',
           'b494cfcf-d372-4292-8a93-e0db95105e2c',
-          'root@root.com',
+          'Jered',
+          'Wong',
+          'agent1@scroogebank.com',
+          '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+          'AGENT',
+          TRUE,
+          '2025-03-26 07:59:15.736664+00'
+        );
+
+        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
+        VALUES (
+          '0818fcb0-ee20-4f67-88b0-a68c21b6be1e',
           'Root',
           'Admin',
+          'root@root.com',
           '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
-          'ADMIN'
+          'ADMIN',
+          TRUE,
+          '2025-03-26 07:59:15.736664+00'
+        );
+
+        \c "client-db";
+
+        INSERT INTO clients(date_of_birth, nric, postal_code, phone_number, city, country, first_name, last_name, state, address, agent_id, client_id, email_address, gender, verification_status)
+        VALUES (
+          '1988-05-15',
+          'S9876543A',
+          '238912',
+          '9123456789',
+          'Singapore',
+          'Singapore',
+          'Michael',
+          'Johnson',
+          'Singapore',
+          '789 Orchard Rd',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
+          'michael.johnson@example.com',
+          'MALE',
+          'VERIFIED'
+        );
+
+        INSERT INTO clients(date_of_birth, nric, postal_code, phone_number, city, country, first_name, last_name, state, address, agent_id, client_id, email_address, gender, verification_status)
+        VALUES (
+          '1992-08-21',
+          'S8765432B',
+          '129634',
+          '8234567890',
+          'Singapore',
+          'Singapore',
+          'Sarah',
+          'Williams',
+          'Singapore',
+          '456 Clementi Rd',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
+          'sarah.williams@example.com',
+          'FEMALE',
+          'VERIFIED'
+        );
+
+        INSERT INTO clients(date_of_birth, nric, postal_code, phone_number, city, country, first_name, last_name, state, address, agent_id, client_id, email_address, gender, verification_status)
+        VALUES (
+          '1985-11-30',
+          'S7654321C',
+          '520123',
+          '7345678901',
+          'Singapore',
+          'Singapore',
+          'David',
+          'Brown',
+          'Singapore',
+          '123 Tampines St',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'e6d5c4b3-a2f1-4e3d-9c8b-7a6f5e4d3c2b',
+          'david.brown@example.com',
+          'MALE',
+          'VERIFIED'
+        );
+
+                INSERT INTO accounts(currency, initial_deposit, opening_date, branch_id, account_id, account_status, account_type, client_id)
+        VALUES (
+          'SGD',
+          2500.00,
+          '2023-02-15',
+          'BR001',
+          'a1b2c3d4-e5f6-4a5b-9c8d-7e6f5a4b3c2d',
+          'ACTIVE',
+          'SAVINGS',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f'
+        );
+
+        INSERT INTO accounts(currency, initial_deposit, opening_date, branch_id, account_id, account_status, account_type, client_id)
+        VALUES (
+          'SGD',
+          3500.00,
+          '2023-02-16',
+          'BR001',
+          'b2c3d4e5-f6a7-4b5c-9d8e-7f6f5a4b3c2e',
+          'ACTIVE',
+          'CHECKING',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f'
+        );
+
+        INSERT INTO accounts(currency, initial_deposit, opening_date, branch_id, account_id, account_status, account_type, client_id)
+        VALUES (
+          'SGD',
+          4500.00,
+          '2023-02-17',
+          'BR002',
+          'c3d4e5f6-a7b8-4c5d-9e8f-7f6f5a4b3c2f',
+          'ACTIVE',
+          'SAVINGS',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c'
+        );
+
+        INSERT INTO accounts(currency, initial_deposit, opening_date, branch_id, account_id, account_status, account_type, client_id)
+        VALUES (
+          'SGD',
+          5500.00,
+          '2023-02-18',
+          'BR002',
+          'd4e5f6a7-b8c9-4d5e-9f8a-7f6f5a4b3c2g',
+          'ACTIVE',
+          'BUSINESS',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-15 10:00:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
+          '',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
+          'CREATE',
+          'ad4d71c0-0372-4a97-aba3-32bbf31e9880'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-15 10:01:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'a1b2c3d4-e5f6-4a5b-9c8d-7e6f5a4b3c2d',
+          '',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
+          'CREATE',
+          '13360b09-48b3-4a1b-b676-86b5ee7a19d8'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-16 10:01:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'b2c3d4e5-f6a7-4b5c-9d8e-7f6f5a4b3c2e',
+          '',
+          'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
+          'CREATE',
+          '65b47473-d867-42e7-9b9c-8e5b3b5850c2'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-17 12:00:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
+          '',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
+          'CREATE',
+          '3becde07-2707-46b2-aafe-16d97bf83db8'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-17 12:01:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'c3d4e5f6-a7b8-4c5d-9e8f-7f6f5a4b3c2f',
+          '',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
+          'CREATE',
+          '8ac071f1-2243-4cbf-bd66-4d33c08c5fe9'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-18 12:01:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'd4e5f6a7-b8c9-4d5e-9f8a-7f6f5a4b3c2g',
+          '',
+          'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
+          'CREATE',
+          'ed3ed96d-7102-45f8-9eca-ccd6266018e9'
+        );
+
+        INSERT INTO logs(date_time, after_value, agent_id, attribute_name, before_value, client_id, crud_type, id)
+        VALUES (
+          '2023-02-19 09:00:00',
+          '',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'e6d5c4b3-a2f1-4e3d-9c8b-7a6f5e4d3c2b',
+          '',
+          'e6d5c4b3-a2f1-4e3d-9c8b-7a6f5e4d3c2b',
+          'CREATE',
+          'a32ac913-138b-47ba-9b5f-94628c2344f9'
         );
 
     scriptsConfigMap: ""

@@ -16,7 +16,7 @@ image:
 # set envs for the spring app
 env:
   - name: SPRING_REDIS_HOST
-    value: "redis-redis"
+    value: "redis-master.default.svc.cluster.local"
   - name: SPRING_DATASOURCE_PORT
     value: 5432
   - name: SPRING_DATASOURCE_URL
