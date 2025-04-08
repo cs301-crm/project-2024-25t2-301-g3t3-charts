@@ -67,7 +67,7 @@ env:
   - name: KAFKA_BOOTSTRAP_SERVERS
     value: http://schema-registry-kafka.default.svc.cluster.local:9092
   - name: SPRING_DATASOURCE_URL
-    value: "jdbc:postgresql://scrooge-bank-postgresql.default.svc.cluster.local:5432/postgres"
+    value: "jdbc:postgresql://scrooge-bank-postgresql.default.svc.cluster.local:5432/user-db"
   - name: SPRING_DATASOURCE_DRIVER
     value: "org.postgresql.Driver"
   - name: SPRING_JPA_DIALECT
