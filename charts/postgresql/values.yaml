@@ -342,12 +342,11 @@ primary:
     args: ""
     postgresqlWalDir: ""
     scripts:
-      init-dbs.sql: |
+      01-init-dbs.sql: |
         CREATE DATABASE "user-db";
         CREATE DATABASE "client-db";
         CREATE DATABASE "comms-db";
 
-      init-users.sql: |
         \c "user-db";
         SET statement_timeout = 0;
         SET lock_timeout = 0;
@@ -377,6 +376,7 @@ primary:
         );
 
         ALTER TABLE public.users OWNER TO postgres;
+
         CREATE TABLE public.users_refresh (
             expires_at timestamp(6) with time zone NOT NULL,
             id uuid NOT NULL,
@@ -394,18 +394,6 @@ primary:
         ALTER TABLE ONLY public.users_refresh
             ADD CONSTRAINT fkqjgwan1bufldume9vkj8ptj8m FOREIGN KEY (user_id) REFERENCES public.users(id);
 
-        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
-        VALUES (
-          'b494cfcf-d372-4292-8a93-e0db95105e2c',
-          'Root',
-          'Admin',
-          'root@root.com',
-          '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
-          'ADMIN',
-          TRUE,
-          '2025-03-26 07:59:15.736664+00'
-        );
-      init-comms.sql: |
         \c "comms-db"
         SET statement_timeout = 0;
         SET lock_timeout = 0;
@@ -581,6 +569,19 @@ primary:
             ADD CONSTRAINT user_communications_pkey PRIMARY KEY (id);
         ALTER TABLE ONLY public.usercommunications
             ADD CONSTRAINT usercommunications_pkey PRIMARY KEY (id);
+      02-init-data.sql: |
+        \c "user-db";
+        INSERT INTO public.users (enabled, created_at, id, email, first_name, last_name, password, user_role)
+        VALUES (
+          true,
+          '2025-03-26 07:59:15.736664+00',
+          'b494cfcf-d372-4292-8a93-e0db95105e2c',
+          'root@root.com',
+          'Root',
+          'Admin',
+          '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+          'ADMIN'
+        );
 
     scriptsConfigMap: ""
     ## @param primary.initdb.scriptsSecret Secret with scripts to be run at first boot (in case it contains sensitive information)
