@@ -56,10 +56,10 @@ service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 9000
+  port: 8081
 
 env:
-  - name: SCHEMA_REGISTRY_URL
+  - name: KAFKA_REGISTRY
     value: http://schema-registry.default.svc.cluster.local:8081
   - name: KAFKA_BOOTSTRAP_SERVERS
     value: http://schema-registry-kafka.default.svc.cluster.local:9092
