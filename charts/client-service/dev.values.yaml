@@ -58,6 +58,22 @@ service:
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 9000
 
+env:
+  - name: SCHEMA_REGISTRY_URL
+    value: http://schema-registry.default.svc.cluster.local:8081
+  - name: KAFKA_BOOTSTRAP_SERVERS
+    value: http://schema-registry-kafka.default.svc.cluster.local:9092
+  - name: SPRING_DATASOURCE_URL
+    value: "jdbc:postgresql://client-db-postgresql.default.svc.cluster.local:5432/postgres"
+  - name: SPRING_DATASOURCE_DRIVER
+    value: "org.postgresql.Driver"
+  - name: SPRING_JPA_DIALECT
+    value: org.hibernate.dialect.PostgreSQLDialect
+  - name: SPRING_DATASOURCE_USERNAME
+    value: postgres
+  - name: SPRING_DATASOURCE_PASSWORD
+    value: password
+
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
