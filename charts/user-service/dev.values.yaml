@@ -76,6 +76,8 @@ env:
     value: postgres
   - name: SPRING_DATASOURCE_PASSWORD
     value: password
+  - name: JWT_ISSUER
+    value: http://user-service.default.svc.cluster.local:8080/api/v1/auth
   # - name: JWT_PRIVATE_KEY
   #   valueFrom:
   #     secretKeyRef:
@@ -125,7 +127,6 @@ livenessProbe:
   initialDelaySeconds: 120
   periodSeconds: 10
   failureThreshold: 30
-  timeoutSeconds: 5
   successThreshold: 1
 readinessProbe:
   httpGet:
