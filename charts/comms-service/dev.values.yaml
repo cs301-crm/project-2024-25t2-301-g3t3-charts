@@ -118,16 +118,20 @@ livenessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 120
+  initialDelaySeconds: 60
   periodSeconds: 10
-  failureThreshold: 6
+  failureThreshold: 30
+  timeoutSeconds: 5
+  successThreshold: 1
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 120
+  initialDelaySeconds: 60
   periodSeconds: 10
-  failureThreshold: 6
+  failureThreshold: 30
+  timeoutSeconds: 5
+  successThreshold: 1
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
