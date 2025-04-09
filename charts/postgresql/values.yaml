@@ -650,32 +650,9 @@ primary:
             ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
         ALTER TABLE ONLY public.accounts
             ADD CONSTRAINT fkgymog7firrf8bnoiig61666ob FOREIGN KEY (client_id) REFERENCES public.clients(client_id);
-      02-init-data.sql: |
-        \c "user-db";
-        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
-        VALUES (
-          'b494cfcf-d372-4292-8a93-e0db95105e2c',
-          'Jered',
-          'Wong',
-          'agent1@scroogebank.com',
-          '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
-          'AGENT',
-          TRUE,
-          '2025-03-26 07:59:15.736664+00'
-        );
+      02-init-client.sql: |
 
-        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
-        VALUES (
-          '0818fcb0-ee20-4f67-88b0-a68c21b6be1e',
-          'Root',
-          'Admin',
-          'root@root.com',
-          '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
-          'ADMIN',
-          TRUE,
-          '2025-03-26 07:59:15.736664+00'
-        );
-
+        \c "client-db";
         \c "client-db";
 
         INSERT INTO clients(date_of_birth, nric, postal_code, phone_number, city, country, first_name, last_name, state, address, agent_id, client_id, email_address, gender, verification_status)
@@ -735,7 +712,7 @@ primary:
           'VERIFIED'
         );
 
-                INSERT INTO accounts(currency, initial_deposit, opening_date, branch_id, account_id, account_status, account_type, client_id)
+        INSERT INTO accounts(currency, initial_deposit, opening_date, branch_id, account_id, account_status, account_type, client_id)
         VALUES (
           'SGD',
           2500.00,
@@ -866,6 +843,61 @@ primary:
           'CREATE',
           'a32ac913-138b-47ba-9b5f-94628c2344f9'
         );
+
+        \c "user-db";
+        \c "user-db";
+
+        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
+        VALUES (
+        'b494cfcf-d372-4292-8a93-e0db95105e2c',
+        'Jered',
+        'Wong',
+        'agent1@scroogebank.com',
+        '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+        'AGENT',
+        TRUE,
+        '2025-03-26 07:59:15.736664+00'
+        );
+
+        INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
+        VALUES (
+        '0818fcb0-ee20-4f67-88b0-a68c21b6be1e',
+        'Root',
+        'Admin',
+        'root@root.com',
+        '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+        'ADMIN',
+        TRUE,
+        '2025-03-26 07:59:15.736664+00'
+        );
+    03-init-users.sql: |
+
+      \c "user-db";
+      \c "user-db";
+
+      INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
+      VALUES (
+      'b494cfcf-d372-4292-8a93-e0db95105e2c',
+      'Jered',
+      'Wong',
+      'agent1@scroogebank.com',
+      '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+      'AGENT',
+      TRUE,
+      '2025-03-26 07:59:15.736664+00'
+      );
+
+      INSERT INTO users("id", "first_name", "last_name", "email", "password", "user_role", "enabled", "created_at")
+      VALUES (
+      '0818fcb0-ee20-4f67-88b0-a68c21b6be1e',
+      'Root',
+      'Admin',
+      'root@root.com',
+      '$2a$12$mGNwXNHHYd.czNbOGK3iYu55VVdVI6W05PJn2P3JSzg.ijJPl68MS',
+      'ADMIN',
+      TRUE,
+      '2025-03-26 07:59:15.736664+00'
+      );
 
     scriptsConfigMap: ""
     ## @param primary.initdb.scriptsSecret Secret with scripts to be run at first boot (in case it contains sensitive information)
