@@ -97,13 +97,13 @@ resources:
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   tcpSocket:
-    path: 27017
+    port: 27017
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 9
 readinessProbe:
   tcpSocket:
-    path: 27017
+    port: 27017
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 9
