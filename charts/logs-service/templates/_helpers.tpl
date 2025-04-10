@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "client-service.name" -}}
+{{- define "logs-service.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "client-service.fullname" -}}
+{{- define "logs-service.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "client-service.chart" -}}
+{{- define "logs-service.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "client-service.labels" -}}
-helm.sh/chart: {{ include "client-service.chart" . }}
-{{ include "client-service.selectorLabels" . }}
+{{- define "logs-service.labels" -}}
+helm.sh/chart: {{ include "logs-service.chart" . }}
+{{ include "logs-service.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "client-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "client-service.name" . }}
+{{- define "logs-service.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "logs-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "client-service.serviceAccountName" -}}
+{{- define "logs-service.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "client-service.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "logs-service.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

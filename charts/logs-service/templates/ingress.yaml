@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "client-service.fullname" . }}
+  name: {{ include "logs-service.fullname" . }}
   labels:
-    {{- include "client-service.labels" . | nindent 4 }}
+    {{- include "logs-service.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "client-service.fullname" $ }}
+                name: {{ include "logs-service.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}
