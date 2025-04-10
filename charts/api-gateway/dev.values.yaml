@@ -65,6 +65,8 @@ env:
     value: http://user-service.default.svc.cluster.local:8080
   - name: CLIENT_SERVICE_URL
     value: http://client-service.default.svc.cluster.local:8081
+  - name: LOGS_SERVICE_URL
+    value: http://logs-service.default.svc.cluster.local:8082
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
