@@ -11,7 +11,7 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: prod
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -87,15 +87,32 @@ resources:
 env:
   - name: KAFKA_REGISTRY
     value: "scrooge-bank-registry"
-  - name: KAFKA_BOOTSTRAP_SERVERS
-    value: http://schema-registry-kafka.default.svc.cluster.local:9092
-  - name: SPRING_DATASOURCE_URL
-    value: "mongodb://root:password@scrooge-bank-mongo.default.svc.cluster.local:27017"
   - name: JWT_ISSUER
     value: http://user-service.default.svc.cluster.local:8080/api/v1/auth
   - name: JWT_JWK_SET_URI
     value: http://user-service.default.svc.cluster.local:8080/api/v1/auth/.well-known/jwks.json
-
+  - name: CORS_ORIGIN
+    value: https://itsag3t3.com
+  - name: SPRING_DATASOURCE_HOST
+    valueFrom:
+      secretKeyRef:
+        name: docdb-host
+        key: k8s-spring-datasource-host-docdb
+  - name: SPRING_DATASOURCE_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: docdb-k8s-credentials
+        key: k8s-docdb-username
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: docdb-credentials
+        key: k8s-docdb-password
+  - name: KAFKA_BOOTSTRAP_SERVERS
+    valueFrom:
+      secretKeyRef:
+        name: kafka-host
+        key: k8s-kafka-host
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
