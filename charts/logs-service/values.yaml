@@ -84,6 +84,18 @@ resources:
     cpu: 300m
     memory: 512Mi
 
+env:
+  - name: KAFKA_REGISTRY
+    value: "scrooge-bank-registry"
+  - name: KAFKA_BOOTSTRAP_SERVERS
+    value: http://schema-registry-kafka.default.svc.cluster.local:9092
+  - name: SPRING_DATASOURCE_URL
+    value: "mongodb://root:password@scrooge-bank-mongo.default.svc.cluster.local:27017"
+  - name: JWT_ISSUER
+    value: http://user-service.default.svc.cluster.local:8080/api/v1/auth
+  - name: JWT_JWK_SET_URI
+    value: http://user-service.default.svc.cluster.local:8080/api/v1/auth/.well-known/jwks.json
+
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
@@ -118,11 +130,18 @@ volumes:
       readOnly: true
       volumeAttributes:
         secretProviderClass: scrooge-bank-secrets-provider
+  - name: docdb-ca-cert
+    configMap:
+      name: logs-service-ca-cert
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
   - name: secrets
     mountPath: /mnt/secrets
+    readOnly: true
+  - name: docdb-ca-volume
+    mountPath: /etc/ssl/certs/global-bundle.pem
+    subPath: global-bundle.pem
     readOnly: true
 
 nodeSelector: {}
