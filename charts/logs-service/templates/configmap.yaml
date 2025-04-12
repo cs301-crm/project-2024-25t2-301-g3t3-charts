@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: logs-service-ca-cert
-  labels:
-    {{- include "logs-service.labels" . | nindent 4 }}
-data:
-  global-bundle.pem: |
-{{ .Files.Get "global-bundle.pem" | indent 4 }}

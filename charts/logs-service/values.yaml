@@ -126,17 +126,10 @@ autoscaling:
   targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes:
-  - name: docdb-ca-volume
-    configMap:
-      name: logs-service-ca-cert
+volumes: {}
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts:
-  - name: docdb-ca-volume
-    mountPath: /etc/ssl/certs/global-bundle.pem
-    subPath: global-bundle.pem
-    readOnly: true
+volumeMounts: {}
 
 nodeSelector: {}
 
