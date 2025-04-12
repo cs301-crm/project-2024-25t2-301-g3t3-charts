@@ -638,7 +638,7 @@ primary:
 
         ALTER TABLE public.logs OWNER TO postgres;
 
-        CREATE TABLE public.transaction (
+        CREATE TABLE public.transactions (
             transaction_id uuid NOT NULL,
             client_id character varying(36) NOT NULL,
             account_id character varying(36) NOT NULL,
@@ -648,7 +648,7 @@ primary:
             "timestamp" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
         );
 
-        ALTER TABLE public.transaction OWNER TO postgres;
+        ALTER TABLE public.transactions OWNER TO postgres;
 
         ALTER TABLE ONLY public.accounts
             ADD CONSTRAINT accounts_pkey PRIMARY KEY (account_id);
@@ -662,11 +662,11 @@ primary:
             ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
         ALTER TABLE ONLY public.accounts
             ADD CONSTRAINT fkgymog7firrf8bnoiig61666ob FOREIGN KEY (client_id) REFERENCES public.clients(client_id);
-        ALTER TABLE ONLY public.transaction
+        ALTER TABLE ONLY public.transactions
             ADD CONSTRAINT transaction_pkey PRIMARY KEY (transaction_id);
-        ALTER TABLE ONLY public.transaction
+        ALTER TABLE ONLY public.transactions
             ADD CONSTRAINT transaction_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(account_id);
-        ALTER TABLE ONLY public.transaction
+        ALTER TABLE ONLY public.transactions
             ADD CONSTRAINT transaction_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clients(client_id);
       02-init-data.sql: |
         \c "user-db";
@@ -885,7 +885,7 @@ primary:
           'a32ac913-138b-47ba-9b5f-94628c2344f9'
         );
 
-        INSERT INTO public.transaction (transaction_id, client_id, account_id, amount, status, description, "timestamp")
+        INSERT INTO public.transactions (transaction_id, client_id, account_id, amount, status, description, "timestamp")
         VALUES (
           'c33657fd-2491-4762-ba6a-ad7c38e2a3ed',
           'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
@@ -896,7 +896,7 @@ primary:
           '2025-03-15 10:00:00'
         );
 
-        INSERT INTO public.transaction (transaction_id, client_id, account_id, amount, status, description, "timestamp")
+        INSERT INTO public.transactions (transaction_id, client_id, account_id, amount, status, description, "timestamp")
         VALUES (
           '786e287e-1fe7-4de5-9f26-cd84184e8853',
           'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
@@ -907,7 +907,7 @@ primary:
           '2025-03-15 11:30:00'
         );
 
-        INSERT INTO public.transaction (transaction_id, client_id, account_id, amount, status, description, "timestamp")
+        INSERT INTO public.transactions (transaction_id, client_id, account_id, amount, status, description, "timestamp")
         VALUES (
           'b0d66703-9806-4ac2-b6e7-d388bd974373',
           'c8f2f4a1-e1b3-4d7c-a9e5-6f8b9c0d1e2f',
@@ -918,7 +918,7 @@ primary:
           '2025-03-15 12:15:00'
         );
 
-        INSERT INTO public.transaction (transaction_id, client_id, account_id, amount, status, description, "timestamp")
+        INSERT INTO public.transactions (transaction_id, client_id, account_id, amount, status, description, "timestamp")
         VALUES (
           'd9fedf89-24fa-437a-b5f5-0a7c958a412c',
           'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
@@ -929,7 +929,7 @@ primary:
           '2025-03-15 13:00:00'
         );
 
-        INSERT INTO public.transaction (transaction_id, client_id, account_id, amount, status, description, "timestamp")
+        INSERT INTO public.transactions (transaction_id, client_id, account_id, amount, status, description, "timestamp")
         VALUES (
           '62798b5c-038a-4d48-8eff-c785642591b6',
           'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
@@ -940,7 +940,7 @@ primary:
           '2025-03-15 14:45:00'
         );
 
-        INSERT INTO public.transaction (transaction_id, client_id, account_id, amount, status, description, "timestamp")
+        INSERT INTO public.transactions (transaction_id, client_id, account_id, amount, status, description, "timestamp")
         VALUES (
           'a82f2a74-2d0c-4724-90db-d9a768a94bdb',
           'd7e6f5d4-c3b2-4a1e-9f8d-7c6b5a4e3d2c',
