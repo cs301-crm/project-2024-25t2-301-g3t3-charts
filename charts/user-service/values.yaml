@@ -20,7 +20,7 @@ env:
   - name: SPRING_DATASOURCE_PORT
     value: 5432
   - name: SPRING_DATASOURCE_URL
-    value: "jdbc:postgresql://$(SPRING_DATASOURCE_HOST):$(SPRING_DATASOURCE_PORT)/user-db"
+    value: "jdbc:postgresql://$(SPRING_DATASOURCE_HOST):5432/user-db"
   - name: SPRING_DATASOURCE_DRIVER
     value: "org.postgresql.Driver"
   - name: SPRING_JPA_DDL
@@ -51,6 +51,15 @@ env:
       secretKeyRef:
         name: db-credentials
         key: k8s-db-password
+  - name: KAFKA_REGISTRY
+    value: scrooge-bank-registry
+  - name: KAFKA_BOOTSTRAP_SERVERS
+    valueFrom:
+      secretKeyRef:
+        name: kafka-host
+        key: k8s-kafka-host
+  - name: JWT_ISSUER
+    value: https://user-service.default.svc.cluster.local:8080/api/v1/auth
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
