@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: client-service-ca-cert
+  name: comms-service-ca-cert
   labels:
-    {{- include "client-service.labels" . | nindent 4 }}
+    {{- include "comms-service.labels" . | nindent 4 }}
 data:
   global-bundle.pem: |
 {{ .Files.Get "global-bundle.pem" | indent 4 }}
