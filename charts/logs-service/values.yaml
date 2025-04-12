@@ -9,7 +9,7 @@ replicaCount: 1
 image:
   repository: 345215350058.dkr.ecr.ap-southeast-1.amazonaws.com/cs301-crm/logs-service
   # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: prod
 
