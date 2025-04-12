@@ -138,13 +138,13 @@ autoscaling:
 
 # Additional volumes on the output Deployment definition.
 volumes:
-  - name: user-service-ca-cert
+  - name: user-service-ca-volume
     configMap:
       name: user-service-ca-cert
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
-  - name: user-ca-volume
+  - name: user-service-ca-volume
     mountPath: /etc/ssl/certs/global-bundle.pem
     subPath: global-bundle.pem
     readOnly: true
