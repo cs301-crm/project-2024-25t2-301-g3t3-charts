@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
-    argocd-image-updater.argoproj.io/image-list: logs-service=345215350058.dkr.ecr.ap-southeast-1.amazonaws.com/cs301-crm/logs-service:latest
+    argocd-image-updater.argoproj.io/image-list: logs-service=345215350058.dkr.ecr.ap-southeast-1.amazonaws.com/cs301-crm/logs-service:prod
     argocd-image-updater.argoproj.io/api-gateway.update-strategy: digest
     argocd-image-updater.argoproj.io/write-back-method: git
   finalizers:
