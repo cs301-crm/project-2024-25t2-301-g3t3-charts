@@ -59,7 +59,7 @@ env:
         name: kafka-host
         key: k8s-kafka-host
   - name: JWT_ISSUER
-    value: https://user-service.default.svc.cluster.local:8080/api/v1/auth
+    value: https://api.itsag3t3.com/api/v1/auth
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
