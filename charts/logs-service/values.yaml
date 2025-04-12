@@ -29,7 +29,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "scrooge-bank-secrets"
+  name: "secret-reader"
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -78,8 +78,8 @@ ingress:
 
 resources:
   limits:
-    cpu: 300m
-    memory: 512Mi
+    cpu: 600m
+    memory: 1Gi
   requests:
     cpu: 300m
     memory: 512Mi
@@ -88,31 +88,17 @@ env:
   - name: KAFKA_REGISTRY
     value: "scrooge-bank-registry"
   - name: JWT_ISSUER
-    value: http://user-service.default.svc.cluster.local:8080/api/v1/auth
+    value: https://api.itsag3t3.com/api/v1/auth
   - name: JWT_JWK_SET_URI
     value: http://user-service.default.svc.cluster.local:8080/api/v1/auth/.well-known/jwks.json
   - name: CORS_ORIGIN
     value: https://itsag3t3.com
-  - name: SPRING_DATASOURCE_HOST
-    valueFrom:
-      secretKeyRef:
-        name: docdb-host
-        key: k8s-spring-datasource-host-docdb
-  - name: SPRING_DATASOURCE_USERNAME
-    valueFrom:
-      secretKeyRef:
-        name: docdb-k8s-credentials
-        key: k8s-docdb-username
-  - name: SPRING_DATASOURCE_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: docdb-credentials
-        key: k8s-docdb-password
-  - name: KAFKA_BOOTSTRAP_SERVERS
-    valueFrom:
-      secretKeyRef:
-        name: kafka-host
-        key: k8s-kafka-host
+
+envFrom:
+  - secretRef:
+      name: kafka-bootstrap-servers
+  - secretRef:
+      name: docdb-credentials
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
@@ -141,21 +127,12 @@ autoscaling:
 
 # Additional volumes on the output Deployment definition.
 volumes:
-  - name: secrets
-    csi:
-      driver: secrets-store.csi.k8s.io
-      readOnly: true
-      volumeAttributes:
-        secretProviderClass: scrooge-bank-secrets-provider
-  - name: docdb-ca-cert
+  - name: docdb-ca-volume
     configMap:
       name: logs-service-ca-cert
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
-  - name: secrets
-    mountPath: /mnt/secrets
-    readOnly: true
   - name: docdb-ca-volume
     mountPath: /etc/ssl/certs/global-bundle.pem
     subPath: global-bundle.pem
