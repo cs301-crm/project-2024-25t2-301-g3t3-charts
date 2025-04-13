@@ -16,7 +16,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: api-gateway
+                name: api-gateway-prod
                 port:
                   number: 9000
   tls:
