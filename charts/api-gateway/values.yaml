@@ -85,6 +85,8 @@ env:
     value: http://client-service-prod.default.svc.cluster.local:8081
   - name: LOGS_SERVICE_URL
     value: http://logs-service-prod.default.svc.cluster.local:8082
+  - name: FRONTEND_URL
+    value: https://itsag3t3.com
 
 resources:
   limits:
