@@ -95,8 +95,6 @@ env:
     value: org.hibernate.dialect.PostgreSQLDialect
   - name: CORS_ORIGIN
     value: https://itsag3t3.com
-  - name: KAFKA_REGISTRY
-    value: scrooge-bank-registry
   - name: JWT_ISSUER
     value: https://api.itsag3t3.com/api/v1/auth
   - name: JWT_JWK_SET_URI
