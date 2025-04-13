@@ -41,6 +41,34 @@ podLabels: {}
 podSecurityContext:
   {}
   # fsGroup: 2000
+env:
+  # - name: SPRING_INIT_SQL_DATA
+  #   value: classpath:data.sql
+  # - name: SPRING_INIT_SQL_SCHEMA
+  #   value: classpath:schema.sql
+  - name: SPRING_DATASOURCE_URL
+    value: "jdbc:postgresql://$(SPRING_DATASOURCE_HOST):5432/communication_db"
+  - name: SPRING_DATASOURCE_DRIVER
+    value: "org.postgresql.Driver"
+  - name: SPRING_JPA_DDL
+    value: "update"
+  - name: SPRING_JPA_DIALECT
+    value: org.hibernate.dialect.PostgreSQLDialect
+  - name: CORS_ORIGIN
+    value: https://itsag3t3.com
+  - name: JWT_ISSUER
+    value: https://api.itsag3t3.com/api/v1/auth
+  - name: KAFKA_REGISTRY
+    value: scrooge-bank-registry
+  - name: JWT_JWK_SET_URI
+    value: http://user-service.default.svc.cluster.local:8080/api/v1/auth/.well-known/jwks.json
+envFrom:
+  - secretRef:
+      name: kafka-bootstrap-servers
+  - secretRef:
+      name: db-credentials
+  - secretRef:
+      name: tls-credentials
 
 securityContext:
   {}
