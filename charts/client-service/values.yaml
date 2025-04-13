@@ -29,7 +29,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "scrooge-bank-secrets"
+  name: "secret-reader"
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -78,19 +78,19 @@ ingress:
 
 resources:
   limits:
-    cpu: 600m
+    cpu: 500m
     memory: 1Gi
   requests:
-    cpu: 300m
-    memory: 512Mi
+    cpu: 400m
+    memory: 1Gi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 30
-  periodSeconds: 10
+  initialDelaySeconds: 60
+  periodSeconds: 5
   failureThreshold: 6
   successThreshold: 1
 readinessProbe:
@@ -98,7 +98,7 @@ readinessProbe:
     path: /actuator/health
     port: http
   initialDelaySeconds: 60
-  periodSeconds: 10
+  periodSeconds: 5
   failureThreshold: 6
   successThreshold: 1
 
@@ -112,16 +112,13 @@ autoscaling:
 
 # Additional volumes on the output Deployment definition.
 volumes:
-  - name: docdb-ca-cert
+  - name: client-service-ca-volume
     configMap:
       name: client-service-ca-cert
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
-  - name: secrets
-    mountPath: /mnt/secrets
-    readOnly: true
-  - name: docdb-ca-volume
+  - name: client-service-ca-volume
     mountPath: /etc/ssl/certs/global-bundle.pem
     subPath: global-bundle.pem
     readOnly: true
