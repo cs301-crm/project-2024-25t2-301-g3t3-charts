@@ -5,7 +5,7 @@ metadata:
   name: http-01-prod
 spec:
   acme:
-    email: yaxit77590@birige.com # temp mail
+    email: root.scroogebank@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: http-01-prod-cluster-issuer

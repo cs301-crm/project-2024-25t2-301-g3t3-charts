@@ -22,7 +22,7 @@ fullnameOverride: ""
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
   # Annotations to add to the service account
@@ -116,16 +116,14 @@ livenessProbe:
     port: http
   initialDelaySeconds: 60
   periodSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
+  failureThreshold: 12
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: http
   initialDelaySeconds: 60
   periodSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
+  failureThreshold: 12
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:

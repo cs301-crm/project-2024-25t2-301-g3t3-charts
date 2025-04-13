@@ -108,27 +108,27 @@ ingress:
 
 resources:
   limits:
-    cpu: 800m
-    memory: 1Gi # 3GB memory
+    cpu: 500m
+    memory: 1.5Gi
   requests:
     cpu: 400m
-    memory: 512Mi
+    memory: 1Gi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 40
-  periodSeconds: 10
-  failureThreshold: 5
+  initialDelaySeconds: 60
+  periodSeconds: 5
+  failureThreshold: 12
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: http
-  initialDelaySeconds: 40
-  periodSeconds: 10
-  failureThreshold: 5
+  initialDelaySeconds: 60
+  periodSeconds: 5
+  failureThreshold: 12
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
