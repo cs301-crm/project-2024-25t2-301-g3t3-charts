@@ -90,7 +90,7 @@ env:
   - name: JWT_ISSUER
     value: https://api.itsag3t3.com/api/v1/auth
   - name: JWT_JWK_SET_URI
-    value: http://user-service.default.svc.cluster.local:8080/api/v1/auth/.well-known/jwks.json
+    value: http://user-service-prod.default.svc.cluster.local:8080/api/v1/auth/.well-known/jwks.json
   - name: CORS_ORIGIN
     value: https://itsag3t3.com
 
